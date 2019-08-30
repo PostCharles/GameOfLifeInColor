@@ -1,0 +1,137 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:GameOfLifeInColor.WPF.Controls">
+
+    <Style TargetType="{x:Type TextBox}"
+           x:Key="RgbTextBoxStyle2">
+        <Setter Property="Width"
+                Value="30" />
+        <Setter Property="MaxLength"
+                Value="3" />
+        <Setter Property="IsReadOnly"
+                Value="True" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="TextAlignment"
+                Value="Center" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Foreground"
+                Value="{Binding RelativeSource={RelativeSource AncestorType=local:ColorPicker}, Path=BorderBrush}" />
+
+    </Style>
+
+    <Style TargetType="{x:Type local:ColorPicker}">
+        <Setter Property="FocusVisualStyle"
+                Value="{x:Null}" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:ColorPicker}">
+                    <StackPanel>
+
+                        <local:BaseColorSlider Name="PART_ColorSlider"
+                                               Height="15"
+                                               Width="{TemplateBinding Width}"
+                                               Margin="0,0,0,8"
+                                               BorderBrush="{TemplateBinding BorderBrush}"
+                                               BorderThickness="1" />
+
+                        <StackPanel>
+                            <Border BorderThickness="1"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    HorizontalAlignment="Center">
+                                <Canvas Name="PART_ColorField"
+                                        Height="{TemplateBinding ColorCanvasHeight}"
+                                        Margin="0"
+                                        Width="{TemplateBinding Width}"
+                                        ClipToBounds="True">
+                                    <Rectangle Name="BaseColorRectangle"
+                                               Height="{Binding ElementName=PART_ColorField, Path=Height}"
+                                               Width="{Binding ElementName=PART_ColorField, Path=Width}"
+                                               Fill="{TemplateBinding BaseColor}"/>
+                                    <Rectangle Name="TintRectangle"
+                                               Width="{Binding ElementName=PART_ColorField,Path=Width}"
+                                               Height="{Binding ElementName=PART_ColorField,Path=Height}">
+                                        <Rectangle.Fill>
+                                            <LinearGradientBrush StartPoint="0,0"
+                                                                 EndPoint="1,0">
+                                                <GradientStop x:Name="PART_FirstTintGradientStop"
+                                                              Offset="0"
+                                                              Color="#ffffffff" />
+                                                <GradientStop Offset="1"
+                                                              Color="#00000000" />
+                                            </LinearGradientBrush>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                    <Rectangle Name="ShadeRectangle"
+                                               Width="{Binding ElementName=PART_ColorField,Path=Width}"
+                                               Height="{Binding ElementName=PART_ColorField,Path=Height}">
+                                        <Rectangle.Fill>
+                                            <LinearGradientBrush StartPoint="0,1"
+                                                                 EndPoint="0, 0">
+                                                <GradientStop x:Name="PART_FirstShadeGradientStop"
+                                                              Offset="0"
+                                                              Color="#ff000000" />
+                                                <GradientStop Offset="1"
+                                                              Color="#00000000" />
+                                            </LinearGradientBrush>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+
+                                    <Canvas Name="PART_ColorSelector"
+                                            Width="10"
+                                            Height="10"
+                                            IsHitTestVisible="False">
+                                        <Ellipse Width="10"
+                                                 Height="10"
+                                                 StrokeThickness="3"
+                                                 Stroke="#FFFFFFFF"
+                                                 IsHitTestVisible="False" />
+                                        <Ellipse Width="10"
+                                                 Height="10"
+                                                 StrokeThickness="1"
+                                                 Stroke="#FF000000"
+                                                 IsHitTestVisible="False" />
+                                    </Canvas>
+                                </Canvas>
+                            </Border>
+                        </StackPanel>
+
+                        <local:TintShadeSlider Name="PART_TintShadeSlider"
+                                               Height="15"
+                                               Width="{TemplateBinding Width}"
+                                               Margin="0,4,0,4"
+                                               Background="{TemplateBinding BaseColor}"
+                                               BorderBrush="{TemplateBinding BorderBrush}"
+                                               BorderThickness="1" />
+
+                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                HorizontalAlignment="Center">
+                            <Grid Width="{TemplateBinding Width}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Grid.Column="0"
+                                         Text="{TemplateBinding R}"
+                                         Style="{StaticResource RgbTextBoxStyle2}" />
+                                <TextBox Grid.Column="1"
+                                         Text="{TemplateBinding G}"
+                                         Style="{StaticResource RgbTextBoxStyle2}" />
+                                <TextBox Grid.Column="2"
+                                         Text="{TemplateBinding B}"
+                                         Style="{StaticResource RgbTextBoxStyle2}" />
+
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

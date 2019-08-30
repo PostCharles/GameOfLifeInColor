@@ -1,0 +1,306 @@
+﻿<Window x:Class="GameOfLifeInColor.WPF.MainWindow"
+          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          xmlns:controls="clr-namespace:GameOfLifeInColor.WPF.Controls;assembly=GameOfLifeInColor.WPF.Controls"
+          xmlns:core="clr-namespace:GameOfLifeInColor.Core.Models;assembly=GameOfLifeInColor.Core"
+          Background="#00000000"
+          BorderBrush="#00000000"
+          AllowsTransparency="True"
+          BorderThickness="0"
+          WindowStyle="None"
+          SizeToContent="WidthAndHeight"
+          WindowStartupLocation="Manual"
+          Top="0"
+          Left="0"
+          MinWidth="{Binding ElementName=ContentGrid, Path=ActualWidth}"
+          MinHeight="{Binding RelativeSource={RelativeSource Self}, Path=Content.ActualHeight}"
+          DataContext="{Binding Path=Main, Source={StaticResource Locator}}"        
+          Title="MainWindow">
+
+    <Grid Name="ContentGrid" 
+          MouseDown="UIElement_OnMouseDown"
+          Width="{Binding ElementName=BackgroundBorder, Path=ActualWidth}">
+
+        <Grid.RowDefinitions>
+            
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50" />
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="50" />
+        </Grid.ColumnDefinitions>
+
+        <Border Name="BackgroundBorder"
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Grid.Column="0"
+                Grid.ColumnSpan="4"
+                BorderBrush="#FF000000"
+                BorderThickness="1"
+                CornerRadius="0"
+                Background="{StaticResource BackgroundBrush}"
+                />
+        <!--<Image Name="TitleImage" 
+               Grid.Row="0"
+               Grid.Column="1"
+               VerticalAlignment="Bottom"
+               HorizontalAlignment="Left"
+               Margin="10,10"
+               Source="Assets\GameOfLifeInColor.png"
+               Stretch="None"
+               MouseDown="UIElement_OnMouseDown"/>-->
+
+        <Border Grid.Row="0"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                BorderBrush="Azure"
+                BorderThickness="1"
+                Margin="5,10,5,0"
+                Padding="5">
+            
+            <StackPanel Orientation="Horizontal">
+
+
+                <controls:DropDown Name="ColorPickerDropDown"
+                                   DropDownPlacement="BottomCenter"
+                                   Margin="0,0,5,0">
+                    <controls:DropDown.DisplayContent>
+                        <Rectangle Name="CurrentColorRectangle"
+                                   Height="30"
+                                   Width="50"
+                                   StrokeThickness="1"
+                                   Stroke="{StaticResource BorderBrush}"
+                                   Fill="{Binding ElementName=MyGrid, Path=CurrentColor, Converter={StaticResource ColorHsvToSolidColorBrush}}" />
+                    </controls:DropDown.DisplayContent>
+                    <controls:ColorPicker Name="CurrentColorPicker"
+                                          Width="100" />
+                </controls:DropDown>
+
+                <Button Content="Start"
+                        Command="{Binding StartSimulationCommand}"
+                        IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBooleanConverter}}" />
+                <Button Content="Stop"
+                        Command="{Binding StopSimulationCommand}"
+                        IsEnabled="{Binding IsRunning}" />
+                <Button Content="Random"
+                        Command="{Binding RandomizeCommand}" />
+
+                <Label Content="Settings:"
+                       Target="{Binding ElementName=SettingsContainer}"
+                       FontWeight="Black"
+                       Margin="25,0,0,0" />
+                <StackPanel Name="SettingsContainer"
+                            Orientation="Horizontal">
+
+                    <controls:DropDown Name="GridSettingsDropDown"
+                                       DropDownPlacement="BottomLeftSwingRight"
+                                       CornerRadius="0,15,15,15">
+                        <controls:DropDown.DisplayContent>
+                            <Label Content="Grid"
+                                   BorderBrush="{StaticResource BorderBrush}"
+                                   BorderThickness="1" />
+                        </controls:DropDown.DisplayContent>
+
+                        <Grid Name="DropDownContent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+
+                            <Label Grid.Column="0"
+                                   Grid.Row="0"
+                                   Content="Columns:"
+                                   Target="{Binding ElementName=Columns}" />
+                            <TextBox x:Name="Columns"
+                                     Grid.Column="1"
+                                     Grid.Row="0"
+                                     Width="25"
+                                     Margin="10,0"
+                                     IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}"
+                                     Text="{Binding ElementName=MyGrid, Path=Columns, Mode=TwoWay}" />
+                            <Label Grid.Column="0"
+                                   Grid.Row="1"
+                                   Content="Rows:"
+                                   Target="{Binding ElementName=Rows}" />
+                            <TextBox Grid.Column="1"
+                                     Grid.Row="1"
+                                     Name="Rows"
+                                     Width="25"
+                                     Margin="10,0"
+                                     IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}"
+                                     Text="{Binding ElementName=MyGrid, Path=Rows, Mode=TwoWay}" />
+                            <Label Grid.Column="0"
+                                   Grid.Row="2"
+                                   Content="Cell Size:"
+                                   Target="{Binding ElementName=CellSize}" />
+                            <TextBox Grid.Column="1"
+                                     Grid.Row="2"
+                                     Name="CellSize"
+                                     Width="25"
+                                     Margin="10,0"
+                                     Text="{Binding ElementName=MyGrid, Path=CellSquareSize, Mode=TwoWay}" />
+                            <Label Grid.Column="0"
+                                   Grid.Row="3"
+                                   Content="Border Thickness:"
+                                   Target="{Binding ElementName=BorderThickness}" />
+                            <TextBox Grid.Column="1"
+                                     Grid.Row="3"
+                                     Name="BorderThickness"
+                                     Width="25"
+                                     Margin="10,0"
+                                     Text="{Binding ElementName=MyGrid, Path=BorderThickness, Mode=TwoWay}" />
+                            <Label Grid.Column="0"
+                                   Grid.Row="4"
+                                   Content="Grid Line Thickness:"
+                                   Target="{Binding ElementName=GridLineThickness}" />
+                            <TextBox Grid.Column="1"
+                                     Grid.Row="4"
+                                     Name="GridLineThickness"
+                                     Width="25"
+                                     Margin="10,0"
+                                     Text="{Binding ElementName=MyGrid, Path=GridLineThickness, Mode=TwoWay}" />
+
+                            <Grid Name="GridColorSelectors"
+                                  Grid.Row="5"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Label Content="Grid"
+                                       Target="{Binding ElementName=GridColor}" />
+                                <Label Content="Border"
+                                       Grid.Column="1"
+                                       Target="{Binding ElementName=BorderColor}" />
+                                <Label Grid.Column="2"
+                                       Content="Lines"
+                                       Target="{Binding ElementName=GridLineColor}" />
+
+                                <controls:DropDown Name="GridColor"
+                                                   DropDownPlacement="BottomCenter"
+                                                   Grid.Column="0"
+                                                   Grid.Row="1">
+                                    <controls:DropDown.DisplayContent>
+                                        <Rectangle Name="GridDisplay"
+                                                   Height="20"
+                                                   Width="20"
+                                                   StrokeThickness="1"
+                                                   Stroke="{StaticResource BorderBrush}"
+                                                   Fill="{Binding ElementName=GridPicker, Path=CurrentColorBrush}" />
+                                    </controls:DropDown.DisplayContent>
+                                    <controls:ColorPicker Name="GridPicker"
+                                                          Width="100"
+                                                          CurrentColorBrush="{Binding ElementName=MyGrid, Path=Background, Mode=TwoWay}" />
+                                </controls:DropDown>
+
+                                <controls:DropDown Name="BorderColor"
+                                                   Grid.Column="1"
+                                                   Grid.Row="1">
+                                    <controls:DropDown.DisplayContent>
+                                        <Rectangle Name="BorderDisplay"
+                                                   Height="20"
+                                                   Width="20"
+                                                   StrokeThickness="1"
+                                                   Stroke="{StaticResource BorderBrush}" />
+                                    </controls:DropDown.DisplayContent>
+                                    <controls:ColorPicker Name="BorderPicker"
+                                                          Width="100"
+                                                          CurrentColorBrush="{Binding ElementName=MyGrid, Path=BorderBrush, Mode=TwoWay}" />
+                                </controls:DropDown>
+
+                                <controls:DropDown Name="GridLineColor"
+                                                   Grid.Column="2"
+                                                   Grid.Row="1">
+                                    <controls:DropDown.DisplayContent>
+                                        <Rectangle Name="GridLineDisplay"
+                                                   Height="20"
+                                                   Width="20"
+                                                   StrokeThickness="1"
+                                                   Stroke="{StaticResource BorderBrush}" />
+                                    </controls:DropDown.DisplayContent>
+                                    <controls:ColorPicker Name="GridLinePicker"
+                                                          Width="100"
+                                                          CurrentColorBrush="{Binding ElementName=MyGrid, Path=GridLineBrush, Mode=TwoWay}" />
+                                </controls:DropDown>
+
+                            </Grid>
+                        </Grid>
+                    </controls:DropDown>
+                    <controls:DropDown Name="SimulationSettingsDropDown"
+                                       DropDownPlacement="BottomLeftSwingRight"
+                                       CornerRadius="0,15,15,15">
+
+                        <controls:DropDown.DisplayContent>
+                            <Label Content="Simulation"
+                                   BorderBrush="{StaticResource BorderBrush}"
+                                   BorderThickness="1" />
+                        </controls:DropDown.DisplayContent>
+
+                        <StackPanel HorizontalAlignment="Stretch"
+                                    Width="250">
+
+                            <ComboBox Name="RuleSetSelector"
+                                      ItemsSource="{Binding RuleSetList}"
+                                      SelectedItem="{Binding SelectedRuleSet, Mode=TwoWay}"
+                                      ItemTemplate="{StaticResource TypeForComboBox}" />
+                            <ContentPresenter Name="RuleSetOptionControls"
+                                              Content="{Binding RuleSetOptions}"
+                                              Margin="4,0,4,15" />
+                            <ComboBox Name="RandomizerSelector"
+                                      ItemsSource="{Binding RandomizerList}"
+                                      SelectedItem="{Binding SelectedRandomizer, Mode=TwoWay}"
+                                      ItemTemplate="{StaticResource TypeForComboBox}" />
+                            <ContentPresenter Name="RandomizerOptionControls"
+                                              Content="{Binding RandomizerOptions, Mode=TwoWay}"
+                                              Margin="4,0" />
+
+                        </StackPanel>
+
+                    </controls:DropDown>
+                </StackPanel>
+
+
+            </StackPanel></Border>
+
+
+        <controls:ColorGrid Name="MyGrid"
+                            Grid.Row="1"
+                            Grid.RowSpan="2"
+                            Grid.Column="1"
+                            Grid.ColumnSpan="2"
+                            HorizontalAlignment="Center"
+                            Margin="10,10,10,50"
+                            Cells="{Binding Cells}"
+                            Columns="30"
+                            Rows="20"
+                            IsPaintingEnabled="{Binding IsRunning, Converter={StaticResource InverseBooleanConverter}}"
+                            Background="{Binding ElementName=GridDisplay, Path=Fill, Mode=OneWayToSource}"
+                            BorderBrush="{Binding ElementName=BorderDisplay, Path=Fill, Mode=OneWayToSource}"
+                            GridLineBrush="{Binding ElementName=GridLineDisplay, Path=Fill, Mode=OneWayToSource}"
+                            CurrentColor="{Binding ElementName=CurrentColorPicker, Path=CurrentColor}"/>
+    </Grid>
+</Window>

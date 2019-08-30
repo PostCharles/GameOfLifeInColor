@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:GameOfLifeInColor.WPF.Controls;assembly=GameOfLifeInColor.WPF.Controls">
+    <Style TargetType="{x:Type controls:ColorPicker}">
+        <Style.Setters>
+            <Setter Property="Background"
+                    Value="{StaticResource BackgroundBrush}" />
+            <Setter Property="BorderBrush"
+                    Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderThickness"
+                    Value="1" />
+        </Style.Setters>
+    </Style>
+
+</ResourceDictionary>

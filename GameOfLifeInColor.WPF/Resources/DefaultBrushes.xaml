@@ -1,0 +1,24 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="BackgroundBrush"
+                     Color="#FF303030" />
+    <SolidColorBrush x:Key="BorderBrush" 
+                     Color="AliceBlue"/>
+    <SolidColorBrush x:Key="TextBrush"
+                     Color="AliceBlue" />
+    <SolidColorBrush x:Key="DisabledTextBrush"
+                     Color="#FF808080"/>
+    <SolidColorBrush x:Key="DisabledBackgroundBrush"
+                     Color="#FFA0A0A0"/>
+    <SolidColorBrush x:Key="DisabledBrush"
+                     Color="AliceBlue" />
+    <SolidColorBrush x:Key="MouseOverBrush"
+                     Color="AliceBlue"/>
+    <SolidColorBrush x:Key="MouseOverToggleButtonBrush"
+                     Color="#FF606060"/>
+    <SolidColorBrush x:Key="HighlighterBrush"
+                     Color="#FF202040"/>
+    <Color x:Key="TransparentColor"
+           A="0" R="0" G="0" B="0"/>
+</ResourceDictionary>
